@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    لوازم یدکی اتوبوس و کامیون نقشینه | قطعات ناوگان جاده‌ای</title>
+    <title>لوازم یدکی نقشینه | قطعات ماشین سنگین</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/dist/font-face.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,7 +11,7 @@
         tailwind.config = { darkMode: 'class' }
     </script>
     <style>
-        body { font-family: Vazirmatn, sans-serif; transition: all 0.5s ease; scroll-behavior: smooth; }
+        body { font-family: Vazirmatn, sans-serif; transition: all 0.5s ease; }
         
         .truck-overlay {
             background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.96)), 
@@ -23,22 +23,29 @@
                               url('https://images.unsplash.com/photo-1591768793355-74d750058e17?q=80&w=2070&auto=format&fit=crop');
         }
 
-        /* انیمیشن متن هدر */
+        /* انیمیشن نئونی با خوانایی بالا در هر دو تم */
         @keyframes neon-glow {
-            0%, 100% { color: #fff; text-shadow: 0 0 10px #facc15, 0 0 20px #facc15; }
-            50% { color: #facc15; text-shadow: 0 0 5px #fff, 0 0 10px #fff; }
+            0%, 100% { color: #1e293b; text-shadow: 0 0 8px #facc15; }
+            50% { color: #facc15; text-shadow: 0 0 15px #eab308, 0 0 2px #000; }
         }
-        .neon-text { animation: neon-glow 3s infinite; }
+        .dark .neon-text {
+            animation: neon-glow-dark 3s infinite;
+        }
+        @keyframes neon-glow-dark {
+            0%, 100% { color: #fff; text-shadow: 0 0 10px #facc15; }
+            50% { color: #facc15; text-shadow: 0 0 20px #facc15; }
+        }
+        .neon-text { animation: neon-glow 3s infinite; font-weight: 900; }
 
         .glass-ui {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .dark .glass-ui { background: rgba(0, 0, 0, 0.2); }
+        .dark .glass-ui { background: rgba(0, 0, 0, 0.3); }
         
         .text-gold {
-            background: linear-gradient(to right, #facc15, #eab308, #fbbf24);
+            background: linear-gradient(to right, #facc15, #fbbf24);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -48,86 +55,82 @@
 
     <div class="fixed bottom-6 left-6 z-[100] flex flex-col gap-2 items-start">
         <div class="glass-ui py-1 px-3 rounded-lg text-[9px] flex items-center gap-2 border-l-2 border-green-500">
-            <span id="user-ip" class="font-mono text-white opacity-80 italic">0.0.0.0</span>
+            <span id="user-ip" class="font-mono text-white opacity-80">0.0.0.0</span>
             <span id="user-flag">🇮🇷</span>
         </div>
         <div class="glass-ui py-1 px-3 rounded-lg text-[10px] flex items-center gap-2 border-l-2 border-blue-500 font-bold">
             <i class="fas fa-clock text-blue-400"></i>
             <span id="live-clock">۰۰:۰۰:۰۰</span>
         </div>
-        <div class="glass-ui py-1 px-3 rounded-lg text-[9px] flex items-center gap-2 border-l-2 border-emerald-500 font-medium">
+        <div class="glass-ui py-1 px-3 rounded-lg text-[9px] flex items-center gap-2 border-l-2 border-emerald-500">
             <i class="fas fa-calendar-alt text-emerald-400"></i>
-            <span id="persian-date">در حال دریافت...</span>
+            <span id="persian-date">...</span>
         </div>
     </div>
 
-    <nav class="sticky top-0 z-50 py-5 px-6 md:px-12 flex justify-between items-center backdrop-blur-2xl border-b border-white/5">
+    <nav class="sticky top-0 z-50 py-5 px-6 md:px-12 flex justify-between items-center backdrop-blur-2xl border-b border-white/10">
         <div class="flex flex-col text-right">
-            <h1 class="text-xl md:text-3xl font-black neon-text tracking-tighter italic">
+            <h1 class="text-xl md:text-3xl neon-text tracking-tighter italic">
                 لوازم یدکی اتوبوس و کامیون نقشینه
             </h1>
-            <span class="text-[9px] tracking-[5px] uppercase opacity-40 font-bold text-white mt-1">Naghshineh Truck & Bus Parts</span>
         </div>
         
         <div class="flex items-center gap-3">
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl glass-ui flex items-center justify-center text-yellow-500 transition-transform active:scale-90">
-                <i id="theme-icon" class="fas fa-moon text-lg"></i>
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl glass-ui flex items-center justify-center text-yellow-500 active:scale-90 transition">
+                <i id="theme-icon" class="fas fa-moon"></i>
             </button>
-            <a href="tel:09166181829" class="bg-white text-slate-900 px-5 py-2 rounded-xl font-black text-xs hover:bg-yellow-500 transition shadow-lg">
-                تماس فوری
-            </a>
+            <a href="tel:09166181829" class="bg-yellow-500 text-slate-900 px-5 py-2 rounded-xl font-black text-xs shadow-lg hover:bg-yellow-400 transition">تماس</a>
         </div>
     </nav>
 
     <header class="py-24 px-6 text-center">
         <div class="container mx-auto">
-            <h2 class="text-4xl md:text-7xl font-black mb-8 leading-[1.2] drop-shadow-2xl">
-                تأمین استراتژیک قطعات زیربنایی<br>
-                <span class="text-gold italic border-b-4 border-yellow-500/30">ناوگان حمل و نقل سنگین</span>
+            <h2 class="text-5xl md:text-8xl font-black mb-8 leading-tight">
+                تأمین قطعات اصلی<br>
+                <span class="text-gold italic border-b-4 border-yellow-500/30 text-4xl md:text-7xl">اتوبوس و کامیون</span>
             </h2>
-            <p class="text-slate-400 text-lg md:text-2xl max-w-3xl mx-auto mb-12 font-light leading-relaxed">
-                مرکز تخصصی توزیع قطعات فنی، موتوری و بدنه خودروهای سنگین اروپایی در جنوب غرب کشور
+            <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
+                مرکز تخصصی توزیع قطعات خودروهای سنگین در اهواز و جنوب غرب کشور
             </p>
             <div class="flex justify-center gap-4">
-                <a href="https://www.google.com/maps/dir/?api=1&destination=31.334515,48.629796" target="_blank" class="glass-ui px-10 py-5 rounded-2xl font-black text-lg hover:bg-white hover:text-slate-900 transition-all flex items-center gap-4 border-2 border-white/10 group">
-                    <i class="fas fa-route text-yellow-500 group-hover:text-blue-600 transition-colors"></i> مسیریابی هوشمند واحد اهواز
+                <a href="https://www.google.com/maps/dir/?api=1&destination=31.334515,48.629796" target="_blank" class="glass-ui px-8 py-4 rounded-2xl font-black flex items-center gap-3 hover:bg-white hover:text-slate-900 transition-all border border-white/20">
+                    <i class="fas fa-location-dot text-red-500"></i> مسیریابی به فروشگاه (اهواز)
                 </a>
             </div>
         </div>
     </header>
 
     <section class="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="glass-ui p-8 rounded-[2rem] text-right border-r-4 border-yellow-500 transition-all hover:bg-white/5">
-            <i class="fas fa-boxes-stacked text-yellow-500 text-3xl mb-4"></i>
+        <div class="glass-ui p-8 rounded-[2rem] text-right border-r-4 border-yellow-500">
+            <i class="fas fa-warehouse text-yellow-500 text-3xl mb-4"></i>
             <h4 class="text-lg font-black mb-2">تنوع بی‌نظیر انبار</h4>
-            <p class="text-slate-400 text-xs leading-loose">موجودی کامل قطعات اسکانیا، ولوو و بنز از معتبرترین برندهای جهانی.</p>
+            <p class="text-slate-400 text-xs">موجودی کامل قطعات اسکانیا، ولوو و بنز در اهواز.</p>
         </div>
-        <div class="glass-ui p-8 rounded-[2rem] text-right border-r-4 border-blue-500 transition-all hover:bg-white/5">
-            <i class="fas fa-truck-loading text-blue-500 text-3xl mb-4"></i>
+        <div class="glass-ui p-8 rounded-[2rem] text-right border-r-4 border-blue-500">
+            <i class="fas fa-truck-fast text-blue-500 text-3xl mb-4"></i>
             <h4 class="text-lg font-black mb-2">لجستیک هوشمند</h4>
-            <p class="text-slate-400 text-xs leading-loose">ارسال فوق‌سریع قطعات به پایانه‌ها و تعمیرگاه‌های سراسر ایران.</p>
+            <p class="text-slate-400 text-xs">ارسال به سراسر استان خوزستان.</p>
         </div>
-        <div class="glass-ui p-8 rounded-[2rem] text-right border-r-4 border-emerald-500 transition-all hover:bg-white/5">
-            <i class="fas fa-certificate text-emerald-500 text-3xl mb-4"></i>
+        <div class="glass-ui p-8 rounded-[2rem] text-right border-r-4 border-emerald-500">
+            <i class="fas fa-shield-check text-emerald-500 text-3xl mb-4"></i>
             <h4 class="text-lg font-black mb-2">اصالت تضمین شده</h4>
-            <p class="text-slate-400 text-xs leading-loose">ارائه گواهی اصالت کالا و ضمانت‌نامه رسمی برای تمامی قطعات سیستمی.</p>
         </div>
     </section>
 
     <section class="container mx-auto px-6 py-20 max-w-4xl">
         <div class="glass-ui p-10 md:p-14 rounded-[3rem] shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-2 h-full bg-yellow-500"></div>
-            <h3 class="text-2xl font-black mb-12 flex items-center gap-4">
-                <i class="fab fa-whatsapp text-green-500 text-4xl"></i> واحد استعلام قیمت آنلاین
+            <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
+            <h3 class="text-2xl font-black mb-10 flex items-center gap-4 text-white">
+                <i class="fab fa-whatsapp text-green-500 text-4xl"></i> استعلام قیمت آنلاین
             </h3>
             <div class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" id="cust_name" placeholder="نام متقاضی" class="w-full p-5 rounded-xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
-                    <input type="text" id="truck_model" placeholder="تیپ خودرو (مثلاً Scania R450)" class="w-full p-5 rounded-xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
+                    <input type="text" id="cust_name" placeholder="نام شما" class="w-full p-5 rounded-xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold text-white">
+                    <input type="text" id="truck_model" placeholder="مدل خودرو" class="w-full p-5 rounded-xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold text-white">
                 </div>
-                <input type="text" id="part_name" placeholder="نام دقیق قطعه یا شماره فنی" class="w-full p-5 rounded-xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
+                <input type="text" id="part_name" placeholder="نام قطعه درخواستی" class="w-full p-5 rounded-xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold text-white">
                 <button onclick="sendToWhatsapp()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-slate-900 font-black py-5 rounded-xl text-xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3">
-                    ارسال درخواست به کارشناس <i class="fas fa-paper-plane"></i>
+                    ارسال به مدیریت فروشگاه <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
         </div>
@@ -135,10 +138,10 @@
 
     <footer class="py-16 text-center border-t border-white/5">
         <div class="flex justify-center gap-8 mb-8">
-            <a href="tel:09166181829" class="text-2xl text-slate-400 hover:text-yellow-500 transition-colors"><i class="fas fa-phone-alt"></i></a>
-            <a href="https://wa.me/989166181829" class="text-3xl text-slate-400 hover:text-green-500 transition-colors"><i class="fab fa-whatsapp"></i></a>
+            <a href="tel:09166181829" class="text-2xl opacity-40 hover:opacity-100 transition-opacity"><i class="fas fa-phone"></i></a>
+            <a href="https://wa.me/989166181829" class="text-3xl opacity-40 hover:opacity-100 transition-opacity"><i class="fab fa-whatsapp"></i></a>
         </div>
-        <p class="text-[10px] opacity-40 font-medium tracking-widest italic mb-6">اهواز، سه راه خرمشهر، میدان انقلاب، بازرگانی نقشینه</p>
+        <p class="text-[10px] opacity-30 italic mb-6">اهواز، سه راه خرمشهر، میدان انقلاب، بازرگانی نقشینه</p>
         <p class="text-[9px] font-black tracking-[6px] opacity-20 uppercase">Powered by AI & REZA</p>
     </footer>
 
@@ -163,11 +166,11 @@
             const icon = document.getElementById('theme-icon');
             if (html.classList.contains('dark')) {
                 html.classList.remove('dark');
-                icon.className = 'fas fa-moon text-lg';
+                icon.className = 'fas fa-moon';
                 localStorage.theme = 'light';
             } else {
                 html.classList.add('dark');
-                icon.className = 'fas fa-sun text-lg';
+                icon.className = 'fas fa-sun';
                 localStorage.theme = 'dark';
             }
         }
@@ -178,7 +181,7 @@
             const model = document.getElementById('truck_model').value;
             const part = document.getElementById('part_name').value;
             if(!part) return alert('نام قطعه را وارد کنید');
-            const msg = `سلام جناب نقشینه، استعلام قیمت:%0A👤 نام: ${name || 'همکار'}%0A🚛 خودرو: ${model || 'سنگین'}%0A⚙️ قطعه: *${part}*`;
+            const msg = `سلام جناب نقشینه، استعلام قیمت قطعه:%0A👤 نام: ${name || 'مشتری'}%0A🚛 خودرو: ${model || 'سنگین'}%0A⚙️ قطعه: *${part}*`;
             window.location.href = `https://wa.me/989166181829?text=${msg}`;
         }
 
