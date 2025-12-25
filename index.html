@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوازم یدکی نقشینه | اهواز</title>
+    <title>لوازم یدکی نقشینه | تخصص در قطعات سنگین</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/dist/font-face.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,107 +11,147 @@
         tailwind.config = { darkMode: 'class' }
     </script>
     <style>
-        body { font-family: Vazirmatn, sans-serif; transition: background-color 0.4s; }
-        
-        /* انیمیشن گرادینت برای هدر */
-        @keyframes gradient-bg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .animated-header {
-            background: linear-gradient(-45deg, #facc15, #eab308, #fbbf24, #f59e0b);
-            background-size: 400% 400%;
-            animation: gradient-bg 5s ease infinite;
-        }
-
-        .heavy-bg {
-            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.95)), 
-                              url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070&auto=format&fit=crop');
+        body { font-family: Vazirmatn, sans-serif; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .truck-overlay {
+            background-image: linear-gradient(to bottom, rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), 
+                              url('https://images.unsplash.com/photo-1591768793355-74d750058e17?q=80&w=2070&auto=format&fit=crop');
             background-size: cover; background-position: center; background-attachment: fixed;
         }
-        .dark .heavy-bg {
-            background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.98)), 
-                              url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070&auto=format&fit=crop');
+        .dark .truck-overlay {
+            background-image: linear-gradient(to bottom, rgba(2, 6, 23, 0.94), rgba(2, 6, 23, 0.99)), 
+                              url('https://images.unsplash.com/photo-1591768793355-74d750058e17?q=80&w=2070&auto=format&fit=crop');
         }
-
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .dark .glass { background: rgba(15, 23, 42, 0.6); }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .dark .glass-card { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .text-gradient {
+            background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
-<body class="heavy-bg text-slate-100 min-h-screen transition-colors duration-500">
+<body class="truck-overlay text-slate-100 min-h-screen">
 
-    <div id="user-info" class="fixed bottom-24 left-6 z-[100] glass py-2 px-4 rounded-2xl shadow-2xl flex items-center gap-3 text-[10px] border border-white/20">
-        <span id="user-flag">🇮🇷</span>
-        <span id="user-country" class="font-bold opacity-80">IRAN</span>
-        <div class="h-3 w-[1px] bg-white/20"></div>
-        <span id="user-ip" class="text-yellow-400 font-mono font-black italic">در حال دریافت...</span>
+    <div class="fixed top-24 left-6 z-[100] flex flex-col gap-2">
+        <div id="user-info" class="glass-card py-2 px-4 rounded-full text-[10px] flex items-center gap-2">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+            <span id="user-ip" class="font-mono text-yellow-400 font-bold">0.0.0.0</span>
+            <span id="user-flag">🇮🇷</span>
+        </div>
+        <div class="glass-card py-2 px-4 rounded-full text-[10px] flex items-center gap-2 font-bold text-blue-400">
+            <i class="fas fa-clock"></i>
+            <span id="live-clock">۰۰:۰۰:۰۰</span>
+        </div>
+        <div class="glass-card py-2 px-4 rounded-full text-[9px] flex items-center gap-2 font-bold text-emerald-400">
+            <i class="fas fa-calendar-day"></i>
+            <span id="persian-date">در حال بارگذاری...</span>
+        </div>
     </div>
 
-    <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-[200]">
-        <a href="https://wa.me/989166181829" class="w-14 h-14 bg-green-500 text-white rounded-full flex items-center justify-center text-3xl shadow-2xl animate-bounce border-2 border-white/20"><i class="fab fa-whatsapp"></i></a>
-        <a href="tel:09166181829" class="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl shadow-2xl border-2 border-white/20"><i class="fas fa-phone"></i></a>
-    </div>
-
-    <nav class="sticky top-0 z-50 glass py-5 px-6 border-b border-white/10 shadow-2xl">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="animated-header text-slate-900 px-8 py-3 rounded-2xl font-black text-lg md:text-2xl shadow-[0_0_25px_rgba(234,179,8,0.5)] italic tracking-tighter">
-                    لوازم یدکی نقشینه
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-6">
-                <button onclick="toggleTheme()" id="theme-btn" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-yellow-500 text-xl hover:bg-white/10 transition-all border border-white/10">
-                    <i id="theme-icon" class="fas fa-moon"></i>
-                </button>
-                <a href="tel:09166181829" class="hidden md:block bg-yellow-500 text-slate-900 px-6 py-2 rounded-xl font-black text-sm hover:scale-105 transition">تماس فوری</a>
-            </div>
+    <nav class="sticky top-0 z-50 py-4 px-8 flex justify-between items-center backdrop-blur-xl border-b border-white/10">
+        <div class="flex flex-col">
+            <span class="text-3xl md:text-5xl font-black text-gradient italic tracking-tighter">نقشینه</span>
+            <span class="text-[10px] tracking-[4px] uppercase opacity-50 font-bold mr-1 text-white">Yadaki Naghshineh</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button onclick="toggleTheme()" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center text-yellow-500 text-xl border border-white/10">
+                <i id="theme-icon" class="fas fa-moon"></i>
+            </button>
+            <a href="tel:09166181829" class="bg-yellow-500 text-slate-900 px-6 py-2 rounded-xl font-black text-sm shadow-xl hover:bg-yellow-400 transition">تماس</a>
         </div>
     </nav>
 
-    <section class="py-24 px-6 text-center">
+    <header class="py-20 px-6 text-center">
         <div class="container mx-auto">
-            <h1 class="text-6xl md:text-8xl font-black mb-10 leading-tight drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">
-                تخصص در قطعات، <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">ضمانت در اصالت</span>
-            </h1>
-            
-            <a href="https://www.google.com/maps/dir/?api=1&destination=31.334515,48.629796" target="_blank" class="glass inline-flex items-center gap-4 px-10 py-5 rounded-3xl font-black text-lg hover:bg-yellow-500 hover:text-slate-900 transition-all shadow-2xl group border-2 border-yellow-500/50">
-                <i class="fas fa-map-marked-alt text-yellow-500 group-hover:text-slate-900 text-2xl animate-pulse"></i> مسیریابی هوشمند به فروشگاه
+            <h2 class="text-5xl md:text-8xl font-black mb-6 leading-tight drop-shadow-2xl">
+                سلطان جاده‌ها با <br>
+                <span class="text-white border-b-8 border-yellow-500 pb-2 italic">قطعات اصلی</span>
+            </h2>
+            <p class="text-slate-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 opacity-80 leading-relaxed">
+                تأمین‌کننده قطعات فنی و بدنه اسکانیا، ولوو و بنز در جنوب ایران
+            </p>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=31.334515,48.629796" target="_blank" class="px-8 py-4 rounded-2xl bg-white text-slate-900 font-black text-lg hover:bg-yellow-500 transition shadow-2xl inline-flex items-center gap-3">
+                <i class="fas fa-map-marker-alt text-red-600"></i> مسیریابی به فروشگاه
             </a>
+        </div>
+    </header>
+
+    <section class="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="glass-card p-8 rounded-[2.5rem] text-center border-b-4 border-yellow-500 hover:scale-105 transition-transform">
+            <i class="fas fa-truck-fast text-yellow-500 text-4xl mb-4"></i>
+            <h4 class="text-xl font-black mb-2">ارسال فوق‌سریع</h4>
+            <p class="text-slate-400 text-xs">ارسال فوری به تمام نقاط خوزستان و ایران.</p>
+        </div>
+        <div class="glass-card p-8 rounded-[2.5rem] text-center border-b-4 border-blue-500 hover:scale-105 transition-transform">
+            <i class="fas fa-check-double text-blue-500 text-4xl mb-4"></i>
+            <h4 class="text-xl font-black mb-2">تضمین اصالت</h4>
+            <p class="text-slate-400 text-xs">فقط قطعات اصلی و برندهای معتبر اروپایی.</p>
+        </div>
+        <div class="glass-card p-8 rounded-[2.5rem] text-center border-b-4 border-green-500 hover:scale-105 transition-transform">
+            <i class="fas fa-phone-office text-green-500 text-4xl mb-4"></i>
+            <h4 class="text-xl font-black mb-2">مشاوره فنی</h4>
+            <p class="text-slate-400 text-xs">پاسخگویی به سوالات فنی شما قبل از خرید.</p>
         </div>
     </section>
 
-    <div class="container mx-auto px-6 py-12 flex flex-wrap justify-center gap-10 md:gap-20 opacity-40">
-        <span class="text-2xl font-black tracking-widest hover:opacity-100 transition cursor-default">SCANIA</span>
-        <span class="text-2xl font-black tracking-widest hover:opacity-100 transition cursor-default">VOLVO</span>
-        <span class="text-2xl font-black tracking-widest hover:opacity-100 transition cursor-default italic">BENZ</span>
-        <span class="text-2xl font-black tracking-widest hover:opacity-100 transition cursor-default">SACHS</span>
-    </div>
-
-    <section class="container mx-auto px-6 py-20 max-w-2xl">
-        <div class="glass p-10 rounded-[3rem] shadow-[0_30px_60px_rgba(0,0,0,0.4)] border-t-4 border-yellow-500">
-            <h3 class="text-3xl font-black mb-10 text-center flex items-center justify-center gap-4">
-                <i class="fab fa-whatsapp text-green-500 text-4xl"></i> استعلام قیمت و موجودی
+    <section class="container mx-auto px-6 py-16 max-w-4xl">
+        <div class="glass-card p-10 md:p-14 rounded-[3.5rem] shadow-2xl border-t-2 border-yellow-500">
+            <h3 class="text-2xl font-black mb-10 text-center flex items-center justify-center gap-4">
+                <i class="fab fa-whatsapp text-green-500 text-4xl"></i> استعلام قیمت هوشمند
             </h3>
-            <div class="space-y-6">
-                <input type="text" id="cust_name" placeholder="نام شما" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold text-lg">
-                <input type="text" id="truck_model" placeholder="مدل ماشین (مثلاً: اسکانیا نسل ۴)" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold text-lg">
-                <input type="text" id="part_name" placeholder="نام قطعه درخواستی" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold text-lg">
-                <button onclick="sendToWhatsapp()" class="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 py-6 rounded-2xl font-black text-xl shadow-2xl flex items-center justify-center gap-4 transition-all active:scale-95">
-                    ارسال استعلام <i class="fas fa-paper-plane"></i>
+            <div class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <input type="text" id="cust_name" placeholder="نام شما" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
+                    <input type="text" id="truck_model" placeholder="مدل خودرو" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
+                </div>
+                <input type="text" id="part_name" placeholder="نام قطعه درخواستی" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
+                <button onclick="sendToWhatsapp()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-slate-900 font-black py-5 rounded-2xl text-xl shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
+                    ارسال به واتس‌اپ <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
         </div>
     </section>
 
-    <footer class="py-10 text-center opacity-40 text-[10px] tracking-[5px]">
-        YADAKI NAGHSHINEH | AHVAZ 2025
+    <footer class="py-16 text-center border-t border-white/5">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="tel:09166181829" class="w-14 h-14 rounded-full glass-card flex items-center justify-center text-xl text-yellow-500"><i class="fas fa-phone"></i></a>
+                <a href="https://wa.me/989166181829" class="w-14 h-14 rounded-full glass-card flex items-center justify-center text-2xl text-green-500"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <p class="opacity-40 text-xs mb-6 italic">اهواز، سه راه خرمشهر، میدان انقلاب، لوازم یدکی نقشینه</p>
+            <p class="text-[10px] font-black tracking-[4px] opacity-20 uppercase">
+                Powered by AI & REZA
+            </p>
+        </div>
     </footer>
 
+    <div class="fixed bottom-6 right-6 z-[200]">
+        <a href="https://wa.me/989166181829" class="w-14 h-14 bg-green-500 rounded-2xl flex items-center justify-center text-2xl shadow-2xl animate-pulse"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
     <script>
-        // تابع دارک مد
+        // ساعت زنده
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('fa-IR', { hour12: false });
+            document.getElementById('live-clock').textContent = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // تاریخ شمسی
+        function updateDate() {
+            const today = new Date().toLocaleDateString('fa-IR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('persian-date').textContent = today;
+        }
+        updateDate();
+
+        // تم
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('theme-icon');
@@ -125,31 +165,28 @@
                 localStorage.theme = 'dark';
             }
         }
-
-        if (localStorage.theme === 'dark') {
-            document.documentElement.classList.add('dark');
-            document.getElementById('theme-icon').className = 'fas fa-sun';
-        }
+        if (localStorage.theme === 'dark') document.documentElement.classList.add('dark');
 
         // واتس‌اپ
         function sendToWhatsapp() {
             const name = document.getElementById('cust_name').value;
             const model = document.getElementById('truck_model').value;
             const part = document.getElementById('part_name').value;
-            if(!part) return alert('نام قطعه ضروری است');
-            const msg = `سلام جناب نقشینه، من ${name || 'مشتری'} هستم. استعلام قیمت *${part}* برای ماشین *${model || 'سنگین'}* رو می‌خواستم.`;
+            if(!part) return alert('نام قطعه را وارد کنید');
+            const msg = `سلام جناب نقشینه، من ${name || 'مشتری'} هستم. استعلام قیمت قطعه: *${part}* برای ماشین: *${model || 'سنگین'}*`;
             window.location.href = `https://wa.me/989166181829?text=${msg}`;
         }
 
-        // دریافت IP
+        // IP
         async function getIP() {
             try {
                 const r = await fetch('https://api.ipify.org?format=json');
                 const d = await r.json();
                 document.getElementById('user-ip').textContent = d.ip;
-            } catch(e) { document.getElementById('user-ip').textContent = 'Error'; }
+            } catch(e) { document.getElementById('user-ip').textContent = 'Online'; }
         }
         getIP();
     </script>
 </body>
 </html>
+
