@@ -7,135 +7,140 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/dist/font-face.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // پیکربندی Tailwind برای حالت دارک مد
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
-        body { font-family: Vazirmatn, sans-serif; background-color: #f1f5f9; }
+        body { font-family: Vazirmatn, sans-serif; transition: background-color 0.3s, color 0.3s; }
         .hero-pattern {
-            background-color: #0f172a;
-            background-image: radial-gradient(#1e293b 2px, transparent 2px);
+            background-image: radial-gradient(rgba(30, 41, 59, 0.2) 2px, transparent 2px);
             background-size: 30px 30px;
         }
-        .card-icon { transition: all 0.3s ease; }
-        .product-card:hover .card-icon { transform: scale(1.1) rotate(-5deg); }
+        .dark .hero-pattern {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px);
+        }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-yellow-500 text-slate-900 w-10 h-10 flex items-center justify-center rounded-xl font-black shadow-lg">ن</div>
-                <h1 class="text-xl font-black text-slate-800 tracking-tight">لوازم یدکی نقشینه</h1>
+    <div id="user-info" class="fixed bottom-4 left-4 z-[100] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md py-2 px-4 rounded-2xl border border-slate-200 dark:border-white/10 shadow-2xl flex items-center gap-3 text-[10px]">
+        <span id="user-flag"></span>
+        <span id="user-country" class="font-bold opacity-70">در حال دریافت...</span>
+        <div class="h-3 w-[1px] bg-slate-300 dark:bg-white/20"></div>
+        <span id="user-ip" class="text-yellow-600 dark:text-yellow-500 font-mono font-bold">0.0.0.0</span>
+    </div>
+
+    <button onclick="toggleTheme()" class="fixed bottom-4 right-4 z-[100] w-12 h-12 bg-yellow-500 text-slate-900 rounded-full shadow-2xl flex items-center justify-center text-xl hover:scale-110 transition-all">
+        <i id="theme-icon" class="fas fa-moon"></i>
+    </button>
+
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="bg-yellow-500 text-slate-900 px-4 py-2 rounded-xl font-black shadow-lg text-sm md:text-lg">
+                    لوازم یدکی نقشینه
+                </div>
             </div>
-            <a href="tel:09166181829" class="bg-slate-100 text-slate-700 px-4 py-2 rounded-full text-sm font-bold border border-slate-200 hover:bg-yellow-500 hover:text-white transition">
-                <i class="fas fa-phone-alt ml-1 text-xs"></i> ۰۹۱۶۶۱۸۱۸۲۹
+            
+            <div class="hidden md:flex gap-8 font-bold text-xs uppercase tracking-widest">
+                <a href="#products" class="hover:text-yellow-500 transition">لیست قطعات</a>
+                <a href="#catalog" class="hover:text-yellow-500 transition">کاتالوگ</a>
+                <a href="tel:09166181829" class="text-yellow-600 dark:text-yellow-500">۰۹۱۶۶۱۸۱۸۲۹</a>
+            </div>
+
+            <a href="https://wa.me/989166181829" class="bg-green-600 text-white p-2 md:px-6 md:py-2 rounded-xl font-bold text-xs flex items-center gap-2">
+                <i class="fab fa-whatsapp text-lg"></i> <span class="hidden md:block">استعلام قیمت</span>
             </a>
         </div>
     </nav>
 
-    <section class="hero-pattern text-white py-20 px-6 border-b-4 border-yellow-500">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl md:text-5xl font-black mb-6 leading-tight">تخصص در قطعات، <span class="text-yellow-500">ضمانت در اصالت</span></h2>
-            <p class="text-slate-400 max-w-2xl mx-auto mb-10 text-lg">بزرگترین مرکز توزیع قطعات یدکی اتوبوس و کامیون در جنوب کشور (اهواز)</p>
-            <div class="flex flex-col md:flex-row justify-center gap-4">
-                <a href="https://wa.me/989166181829" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-2xl shadow-xl flex items-center justify-center gap-3 transition">
-                    <i class="fab fa-whatsapp text-2xl"></i> استعلام سریع قیمت در واتس‌اپ
-                </a>
+    <section class="hero-pattern py-20 px-6 text-center">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight">تخصص در قطعات، <br><span class="text-yellow-500">ضمانت در اصالت</span></h2>
+            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto mb-10 leading-relaxed italic">
+                بزرگترین مرکز پخش قطعات سنگین در جنوب کشور - اهواز
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#products" class="bg-slate-900 dark:bg-yellow-500 text-white dark:text-slate-900 px-10 py-4 rounded-2xl font-black transition shadow-xl">مشاهده انبار</a>
+                <a href="#catalog" class="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-10 py-4 rounded-2xl font-black border border-slate-200 dark:border-slate-700 shadow-md">دانلود کاتالوگ PDF</a>
             </div>
         </div>
     </section>
 
-    <section class="container mx-auto px-6 py-16">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-right">
-            
-            <div class="product-card bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-xl transition group">
-                <div class="card-icon w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-inner">
+    <section id="products" class="container mx-auto px-6 py-20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-800 transition-all">
+                <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-inner">
                     <i class="fas fa-cogs"></i>
                 </div>
-                <h3 class="text-2xl font-black mb-3 text-slate-800">قطعات موتوری</h3>
-                <p class="text-slate-500 leading-relaxed mb-6">انواع بوش، پیستون، یاتاقان و واشرآلات موتورهای اسکانیا و ولوو با ضمانت تعویض.</p>
-                <div class="text-blue-600 font-bold text-sm italic">ارسال به سراسر خوزستان</div>
+                <h3 class="text-2xl font-black mb-3 text-slate-800 dark:text-white">قطعات موتوری</h3>
+                <p class="text-slate-500 dark:text-slate-400 leading-relaxed mb-6">انواع بوش، پیستون، یاتاقان و واشرآلات موتورهای اسکانیا و ولوو.</p>
+                <div class="text-blue-600 dark:text-blue-400 font-bold text-sm italic">ارسال ۲۴ ساعته</div>
             </div>
 
-            <div class="product-card bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-xl transition">
-                <div class="card-icon w-16 h-16 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-inner">
-                    <i class="fas fa-disc-drive"></i> <i class="fas fa-compact-disc"></i>
+            <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-slate-800">
+                <div class="w-16 h-16 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-inner">
+                    <i class="fas fa-truck-monster"></i>
                 </div>
-                <h3 class="text-2xl font-black mb-3 text-slate-800">ترمز و کلاچ</h3>
-                <p class="text-slate-500 leading-relaxed mb-6">دیسک و صفحه، لنت ترمز و بوسترآلات اصلی از معتبرترین برندهای اروپایی.</p>
-                <div class="text-red-600 font-bold text-sm italic">تضمین کیفیت ۱۰۰٪</div>
+                <h3 class="text-2xl font-black mb-3 text-slate-800 dark:text-white">ترمز و کلاچ</h3>
+                <p class="text-slate-500 dark:text-slate-400 leading-relaxed mb-6">دیسک و صفحه، لنت ترمز و بوسترآلات اصلی از برندهای معتبر.</p>
+                <div class="text-yellow-600 dark:text-yellow-400 font-bold text-sm italic">برندهای اروپایی</div>
             </div>
 
-            <div class="product-card bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-xl transition">
-                <div class="card-icon w-16 h-16 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center mb-6 text-3xl shadow-inner">
-                    <i class="fas fa-truck-front"></i>
-                </div>
-                <h3 class="text-2xl font-black mb-3 text-slate-800">بدنه و جلوبندی</h3>
-                <p class="text-slate-500 leading-relaxed mb-6">انواع سپر، چراغ، گلگیر و قطعات ظاهری انواع ماشین‌های سنگین و کشنده.</p>
-                <div class="text-yellow-600 font-bold text-sm italic">تحویل فوری در محل</div>
-            </div>
-
-        </div>
-    </section>
-
-    <section class="bg-slate-800 py-16 px-6">
-        <div class="container mx-auto max-w-4xl bg-slate-900 rounded-[3rem] p-10 text-center border border-slate-700">
-            <i class="fas fa-map-marked-alt text-yellow-500 text-5xl mb-6"></i>
-            <h3 class="text-white text-2xl font-black mb-4 italic">آدرس فروشگاه نقشینه</h3>
-            <p class="text-slate-400 text-lg mb-8">خوزستان، اهواز، سه راه خرمشهر، میدان انقلاب</p>
-            <div class="flex justify-center gap-6">
-                <div class="text-center">
-                    <p class="text-white font-bold text-xl leading-loose">مدیریت: نقشینه</p>
-                    <p class="text-yellow-500 font-black text-2xl tracking-widest">۰۹۱۶۶۱۸۱۸۲۹</p>
-                </div>
+            <div id="catalog" class="bg-yellow-500 rounded-[2.5rem] shadow-xl p-8 flex flex-col items-center justify-center text-center text-slate-900">
+                <i class="fas fa-file-pdf text-4xl mb-4"></i>
+                <h4 class="text-2xl font-black mb-2 uppercase">PDF Catalog</h4>
+                <p class="text-sm font-medium mb-6">لیست کامل قطعات موجود</p>
+                <a href="catalog.pdf" class="bg-slate-900 text-white px-8 py-3 rounded-xl font-bold shadow-2xl">دانلود کنید</a>
             </div>
         </div>
     </section>
 
-    <footer class="py-10 text-center text-slate-500 text-sm">
-        <p>© ۱۴۰۴ - تمامی حقوق برای لوازم یدکی نقشینه محفوظ است.</p>
+    <footer class="bg-slate-100 dark:bg-slate-900 py-16 px-6 text-center transition-all">
+        <p class="text-slate-500 dark:text-slate-400 mb-2">اهواز، سه راه خرمشهر، میدان انقلاب</p>
+        <p class="font-black text-xl text-slate-800 dark:text-yellow-500 tracking-widest">۰۹۱۶۶۱۸۱۸۲۹</p>
+        <div class="mt-8 text-[10px] opacity-50">© ۱۴۰۴ - لوازم یدکی نقشینه</div>
     </footer>
 
-</body>
-    <div id="user-info" class="fixed bottom-4 left-4 z-[100] bg-slate-900/80 backdrop-blur-md text-white text-[10px] py-2 px-4 rounded-2xl border border-white/10 shadow-2xl flex items-center gap-3">
-    <div class="flex items-center gap-2">
-        <span id="user-flag"></span>
-        <span id="user-country" class="font-bold text-slate-300 tracking-wider">Loading...</span>
-    </div>
-    <div class="h-3 w-[1px] bg-white/20"></div>
-    <div class="flex items-center gap-1">
-        <span class="text-slate-500">IP:</span>
-        <span id="user-ip" class="font-mono text-yellow-500">0.0.0.0</span>
-    </div>
-</div>
-
-<script>
-    async function getClientInfo() {
-        try {
-            const response = await fetch('https://ipapi.co/json/');
-            const data = await response.json();
+    <script>
+        // تابع تغییر تم (روز و شب)
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
             
-            // نمایش IP
-            document.getElementById('user-ip').textContent = data.ip;
-            
-            // نمایش نام کشور (به انگلیسی یا فارسی)
-            document.getElementById('user-country').textContent = data.country_name;
-            
-            // نمایش پرچم (استفاده از کد کشور برای ایموجی پرچم)
-            if(data.country_code) {
-                const flag = data.country_code
-                    .toUpperCase()
-                    .replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397));
-                document.getElementById('user-flag').textContent = flag;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
             }
-        } catch (error) {
-            document.getElementById('user-info').style.display = 'none';
-            console.log('خطا در دریافت اطلاعات IP');
         }
-    }
-    
-    // اجرای تابع هنگام لود شدن صفحه
-    getClientInfo();
-</script>
-    
+
+        // چک کردن تم ذخیره شده در مرورگر
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').className = 'fas fa-sun';
+        }
+
+        // دریافت اطلاعات IP
+        async function getInfo() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                document.getElementById('user-ip').textContent = data.ip;
+                document.getElementById('user-country').textContent = data.country_name;
+                const flag = data.country_code.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397));
+                document.getElementById('user-flag').textContent = flag;
+            } catch (e) { console.log('IP error'); }
+        }
+        getInfo();
+    </script>
+</body>
 </html>
 
