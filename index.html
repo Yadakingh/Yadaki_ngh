@@ -29,13 +29,6 @@
                     },
                     animation: {
                         'spin-slow': 'spin 8s linear infinite',
-                        'pulse-glow': 'pulse-glow 2s infinite',
-                    },
-                    keyframes: {
-                        'pulse-glow': {
-                            '0%, 100%': { boxShadow: '0 0 10px #FFD700' },
-                            '50%': { boxShadow: '0 0 25px #FFD700, 0 0 5px #fff' },
-                        }
                     }
                 }
             }
@@ -45,11 +38,29 @@
     <style>
         body { font-family: 'Vazirmatn', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
         
-        /* Preloader */
+        /* --- استایل لودینگ پیشرفته --- */
         #preloader {
-            position: fixed; inset: 0; background: #000; z-index: 9999;
+            position: fixed; inset: 0; background: #050505; z-index: 9999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease-in-out;
+        }
+        
+        .loader-bar-container {
+            width: 200px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loader-bar {
+            width: 0%;
+            height: 100%;
+            background: #FFD700;
+            box-shadow: 0 0 10px #FFD700;
+            transition: width 4s linear; /* تنظیم دقیق ۴ ثانیه */
         }
 
         /* پس‌زمینه زنده */
@@ -75,7 +86,6 @@
             color: #ff3333;
             font-family: monospace;
             text-shadow: 0 0 5px #ff0000;
-            letter-spacing: 2px;
         }
 
         /* افکت طلایی متن */
@@ -87,29 +97,30 @@
         }
 
         /* کارت‌های سه بعدی */
-        .tilt-card {
-            transform-style: preserve-3d;
-            transform: perspective(1000px);
-        }
-        .tilt-card-content {
-            transform: translateZ(20px);
-        }
+        .tilt-card { transform-style: preserve-3d; transform: perspective(1000px); }
+        .tilt-card-content { transform: translateZ(20px); }
 
-        /* استایل اسکرول بار */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; }
         ::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-carbon bg-carbon-pattern text-slate-100 min-h-screen">
+<body class="bg-carbon bg-carbon-pattern text-slate-100 min-h-screen overflow-hidden" id="main-body">
 
     <div id="preloader">
-        <div class="relative w-24 h-24 mb-4">
+        <div class="relative w-28 h-28 mb-6">
             <div class="absolute inset-0 border-t-4 border-industrial-gold rounded-full animate-spin"></div>
-            <div class="absolute inset-2 border-r-4 border-scania-blue rounded-full animate-spin-slow"></div>
-            <i class="fas fa-cog absolute inset-0 flex items-center justify-center text-4xl text-white opacity-50"></i>
+            <div class="absolute inset-3 border-r-4 border-scania-blue rounded-full animate-spin-slow"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-4xl text-gray-500"></i>
+            </div>
         </div>
-        <h2 class="text-xl font-bold tracking-widest text-industrial-gold animate-pulse">NAGHSHINEH PARTS</h2>
+        <h2 class="text-2xl font-black tracking-widest text-white uppercase mb-2">NAGHSHINEH</h2>
+        <p class="text-xs text-industrial-gold font-mono tracking-wider animate-pulse" id="loading-text">LOADING SYSTEM...</p>
+        
+        <div class="loader-bar-container">
+            <div class="loader-bar" id="progress-fill"></div>
+        </div>
     </div>
 
     <div class="led-marquee py-2 sticky top-0 z-50 overflow-hidden whitespace-nowrap flex items-center shadow-lg">
@@ -136,9 +147,6 @@
                     <i class="fas fa-phone-alt animate-bounce"></i> تماس
                 </span>
             </a>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition border border-white/10">
-                <i class="fas fa-adjust text-gray-300"></i>
-            </button>
         </div>
     </nav>
 
@@ -164,9 +172,6 @@
             <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
                 <a href="#request-part" class="px-8 py-4 bg-gradient-to-r from-industrial-gold to-yellow-600 text-black font-black rounded-xl hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] transition transform hover:-translate-y-1 flex items-center gap-3">
                     <i class="fas fa-search"></i> استعلام موجودی
-                </a>
-                <a href="https://goo.gl/maps/YOUR_MAP_LINK" target="_blank" class="px-8 py-4 glass-panel rounded-xl hover:bg-white/10 transition flex items-center gap-3 border border-white/20">
-                    <i class="fas fa-map-marker-alt text-red-500"></i> لوکیشن انبار اهواز
                 </a>
             </div>
         </div>
@@ -206,44 +211,36 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="tilt-card glass-panel p-1 rounded-[2rem] group cursor-pointer" data-aos="flip-left">
                 <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-[1.8rem] h-full transition relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition">
-                        <i class="fas fa-bus text-9xl"></i>
-                    </div>
                     <div class="tilt-card-content relative z-10">
                         <div class="w-16 h-16 bg-blue-900/50 rounded-2xl flex items-center justify-center mb-6 border border-blue-500/30">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Scania_Logo.svg/2560px-Scania_Logo.svg.png" class="w-10 h-10 object-contain brightness-0 invert" alt="Scania">
+                            <i class="fas fa-bus text-3xl text-white"></i>
                         </div>
                         <h3 class="text-2xl font-bold mb-3 text-white">قطعات اسکانیا</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">تامین کلیه قطعات موتوری، گیربکس و بدنه اتوبوس‌های مارال، درسا و کامیون‌های سری G, R, S.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">اتوبوس‌های مارال، درسا و کامیون‌های نسل جدید.</p>
                     </div>
                 </div>
             </div>
 
             <div class="tilt-card glass-panel p-1 rounded-[2rem] group cursor-pointer" data-aos="flip-up">
                 <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-[1.8rem] h-full transition relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition">
-                        <i class="fas fa-truck text-9xl"></i>
-                    </div>
                     <div class="tilt-card-content relative z-10">
                         <div class="w-16 h-16 bg-gray-700/50 rounded-2xl flex items-center justify-center mb-6 border border-gray-500/30">
-                            <i class="fas fa-circle-notch text-4xl text-gray-300"></i> </div>
+                            <i class="fas fa-truck text-3xl text-white"></i>
+                        </div>
                         <h3 class="text-2xl font-bold mb-3 text-white">لوازم ولوو</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">بورس لوازم یدکی کامیون‌های FH500, FH460 و اتوبوس‌های B9 با ضمانت کارکرد.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed">کامیون‌های FH500, FH460 و سری‌های B9.</p>
                     </div>
                 </div>
             </div>
 
             <div class="tilt-card glass-panel p-1 rounded-[2rem] group cursor-pointer" data-aos="flip-right">
                 <div class="bg-gradient-to-br from-gray-800 to-black p-8 rounded-[1.8rem] h-full transition relative overflow-hidden">
-                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition">
-                        <i class="fas fa-wrench text-9xl"></i>
-                    </div>
                     <div class="tilt-card-content relative z-10">
                         <div class="w-16 h-16 bg-industrial-gold/20 rounded-2xl flex items-center justify-center mb-6 border border-industrial-gold/30">
                             <i class="fas fa-gem text-3xl text-industrial-gold"></i>
                         </div>
-                        <h3 class="text-2xl font-bold mb-3 text-white">قطعات اصلی</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">تشخیص قطعات اصلی از تقلبی تخصص ماست. خرید امن با مهر تایید بازرگانی نقشینه.</p>
+                        <h3 class="text-2xl font-bold mb-3 text-white">ضمانت اصلی</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">تشخیص قطعات اصلی و تقلبی با مهر ضمانت.</p>
                     </div>
                 </div>
             </div>
@@ -251,217 +248,87 @@
     </section>
 
     <section id="request-part" class="container mx-auto px-6 py-20 max-w-5xl relative">
-        <div class="absolute -inset-1 bg-gradient-to-r from-industrial-gold to-orange-600 rounded-[3rem] blur opacity-20 animate-pulse"></div>
         <div class="glass-panel p-8 md:p-16 rounded-[3rem] relative shadow-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10">
+            <h3 class="text-3xl md:text-4xl font-black mb-10 text-center">استعلام آنی از واتساپ مدیریت</h3>
             
-            <div class="flex flex-col md:flex-row gap-10 items-center">
-                <div class="w-full md:w-1/2 text-right">
-                    <h3 class="text-3xl md:text-4xl font-black mb-6 flex items-center gap-3">
-                        <span class="w-2 h-12 bg-industrial-gold rounded-full block"></span>
-                        استعلام آنی قیمت
-                    </h3>
-                    <p class="text-gray-400 mb-8 leading-loose">
-                        برای دریافت قیمت روز و موجودی انبار، مشخصات قطعه را وارد کنید. پیام شما مستقیماً به واتساپ <strong class="text-white">جناب نقشینه</strong> ارسال می‌شود.
-                    </p>
-                    <div class="flex items-center gap-4 text-sm text-gray-500">
-                        <div class="flex items-center gap-2"><i class="fas fa-shield-alt text-green-500"></i> پاسخگویی سریع</div>
-                        <div class="flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> مشاوره فنی</div>
-                    </div>
-                </div>
-
-                <div class="w-full md:w-1/2 space-y-4">
-                    <div class="relative group">
-                        <i class="fas fa-user absolute right-4 top-4 text-gray-500 group-focus-within:text-industrial-gold transition"></i>
-                        <input type="text" id="cust_name" placeholder="نام شما" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 pr-12 focus:bg-black focus:border-industrial-gold outline-none transition text-white font-bold">
-                    </div>
-                    <div class="relative group">
-                        <i class="fas fa-truck-moving absolute right-4 top-4 text-gray-500 group-focus-within:text-industrial-gold transition"></i>
-                        <input type="text" id="truck_model" placeholder="مدل خودرو (مثال: ولوو FH500)" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 pr-12 focus:bg-black focus:border-industrial-gold outline-none transition text-white font-bold">
-                    </div>
-                    <div class="relative group">
-                        <i class="fas fa-cog absolute right-4 top-4 text-gray-500 group-focus-within:text-industrial-gold transition"></i>
-                        <input type="text" id="part_name" placeholder="نام قطعه یا شماره فنی" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 pr-12 focus:bg-black focus:border-industrial-gold outline-none transition text-white font-bold">
-                    </div>
-                    <button onclick="sendToWhatsapp()" class="w-full py-5 bg-gradient-to-r from-industrial-gold to-yellow-600 rounded-xl text-black font-black text-xl hover:shadow-[0_0_20px_#FFD700] transition transform active:scale-95 flex items-center justify-center gap-3">
-                        <span>ارسال درخواست</span>
-                        <i class="fab fa-whatsapp text-2xl"></i>
-                    </button>
-                </div>
+            <div class="space-y-4 max-w-2xl mx-auto">
+                <input type="text" id="cust_name" placeholder="نام شما" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-bold focus:border-industrial-gold outline-none">
+                <input type="text" id="truck_model" placeholder="مدل خودرو (مثال: ولوو FH500)" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-bold focus:border-industrial-gold outline-none">
+                <input type="text" id="part_name" placeholder="نام قطعه مورد نظر" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white font-bold focus:border-industrial-gold outline-none">
+                
+                <button onclick="sendToWhatsapp()" class="w-full py-5 bg-gradient-to-r from-industrial-gold to-yellow-600 rounded-xl text-black font-black text-xl hover:shadow-[0_0_20px_#FFD700] transition flex items-center justify-center gap-3">
+                    ارسال درخواست <i class="fab fa-whatsapp text-2xl"></i>
+                </button>
             </div>
-
         </div>
     </section>
 
-    <footer class="border-t border-white/10 bg-black/50 backdrop-blur-md mt-20">
-        <div class="container mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-right">
-                <h4 class="text-xl font-bold text-white mb-2">بازرگانی نقشینه</h4>
-                <p class="text-gray-500 text-sm">اهواز، سه راه خرمشهر، میدان انقلاب، جنب گاراژ...</p>
-            </div>
-            <div class="flex gap-6">
-                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-industrial-gold hover:text-black transition"><i class="fab fa-instagram text-xl"></i></a>
-                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-green-500 hover:text-white transition"><i class="fab fa-whatsapp text-xl"></i></a>
-                <a href="#" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center hover:bg-blue-500 hover:text-white transition"><i class="fab fa-telegram-plane text-xl"></i></a>
-            </div>
-        </div>
-        <div class="bg-black py-4 text-center">
-            <p class="text-[10px] text-gray-600 tracking-widest uppercase font-mono">Designed With Precision | Reza & AI</p>
-        </div>
+    <footer class="border-t border-white/10 bg-black/50 backdrop-blur-md mt-20 py-8 text-center">
+        <p class="text-gray-500 text-sm">© بازرگانی نقشینه | طراحی با هوش مصنوعی</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script>
-        // Initialize AOS
-        AOS.init({
-            once: true,
-            offset: 100,
-            duration: 800,
-            easing: 'ease-out-cubic',
-        });
-
-        // Preloader Logic
+        // --- تنظیمات لودینگ ۴ ثانیه‌ای ---
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
+            const progress = document.getElementById('progress-fill');
+            const loadingText = document.getElementById('loading-text');
+            const body = document.getElementById('main-body');
+
+            // 1. شروع انیمیشن پر شدن نوار (در CSS روی ۴ ثانیه تنظیم شده)
+            setTimeout(() => {
+                progress.style.width = '100%';
+            }, 100);
+
+            // 2. تغییر متن در طول لودینگ
+            setTimeout(() => { loadingText.innerText = "CHECKING INVENTORY..." }, 1500);
+            setTimeout(() => { loadingText.innerText = "CONNECTING TO SERVER..." }, 2800);
+            setTimeout(() => { loadingText.innerText = "READY TO LAUNCH" }, 3600);
+
+            // 3. پایان لودینگ دقیقا سر ۴ ثانیه
             setTimeout(() => {
                 preloader.style.opacity = '0';
+                body.style.overflow = 'auto'; // آزاد کردن اسکرول
+                
+                // حذف کامل از صفحه بعد از محو شدن
                 setTimeout(() => {
                     preloader.style.display = 'none';
-                    // Start Typing Effect after load
+                    // شروع انیمیشن‌های صفحه
+                    AOS.init({ once: true, offset: 100, duration: 800 });
                     typeWriter();
-                }, 500);
-            }, 1500);
+                }, 800);
+            }, 4100); // ۴۱۰۰ میلی‌ثانیه برای اطمینان از پر شدن کامل نوار
         });
 
         // Typing Effect
         const textToType = "قطعات اصلی";
         const typeContainer = document.getElementById('typing-text');
         let typeIndex = 0;
-
         function typeWriter() {
             if (typeIndex < textToType.length) {
                 typeContainer.innerHTML += textToType.charAt(typeIndex);
                 typeIndex++;
                 setTimeout(typeWriter, 150);
-            } else {
-                // Optional: Erase and rewrite logic could go here
             }
         }
 
-        // Animated Counters
-        const counters = document.querySelecto                تأمین قطعات اصلی<br>
-                <span class="text-gold italic border-b-8 border-yellow-500/20 text-4xl md:text-7xl uppercase">BUS & TRUCK</span>
-            </h2>
-            <p class="text-slate-300 text-lg md:text-2xl max-w-2xl mx-auto mb-12 opacity-80 font-light">
-                توزیع‌کننده برتر قطعات ناوگان سنگین در جنوب غرب کشور تحت نظارت <span class="text-white font-bold">علیرضا نقشینه</span>
-            </p>
-            <a href="https://www.google.com/maps/dir/?api=1&destination=31.334515,48.629796" target="_blank" class="glass-ui px-10 py-5 rounded-full font-black text-lg flex items-center gap-4 mx-auto w-fit hover:bg-yellow-500 hover:text-slate-900 transition-all">
-                <i class="fas fa-map-marked-alt text-red-500 text-2xl"></i> لوکیشن فروشگاه اهواز
-            </a>
-        </div>
-    </header>
+        // Tilt Effect
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), { max: 15, speed: 400, glare: true, "max-glare": 0.2 });
 
-    <section class="container mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="glass-ui p-8 rounded-[2.5rem] text-right border-b-4 border-yellow-500 hover:scale-105 transition">
-            <i class="fas fa-boxes text-yellow-500 text-4xl mb-4"></i>
-            <h4 class="text-xl font-black mb-2">تنوع کالایی</h4>
-            <p class="text-slate-400 text-sm">بزرگترین بانک قطعات اسکانیا و ولوو در منطقه.</p>
-        </div>
-        <div class="glass-ui p-8 rounded-[2.5rem] text-right border-b-4 border-blue-500 hover:scale-105 transition">
-            <i class="fas fa-truck-ramp-box text-blue-500 text-4xl mb-4"></i>
-            <h4 class="text-xl font-black mb-2">ارسال سریع</h4>
-            <p class="text-slate-400 text-sm">توزیع روزانه به تمام شهرهای استان خوزستان.</p>
-        </div>
-        <div class="glass-ui p-8 rounded-[2.5rem] text-right border-b-4 border-emerald-500 hover:scale-105 transition">
-            <i class="fas fa-user-check text-emerald-500 text-4xl mb-4"></i>
-            <h4 class="text-xl font-black mb-2">تضمین مدیریت</h4>
-            <p class="text-slate-400 text-sm">با ضمانت و نظارت مستقیم علیرضا نقشینه.</p>
-        </div>
-    </section>
-
-    <section class="container mx-auto px-6 py-20 max-w-4xl">
-        <div class="glass-ui p-10 md:p-14 rounded-[3.5rem] shadow-2xl relative">
-            <div class="absolute -top-6 right-10 bg-yellow-500 text-slate-900 px-6 py-2 rounded-full font-black text-sm">
-                استعلام مستقیم از مدیریت
-            </div>
-            <h3 class="text-2xl font-black mb-10 flex items-center gap-4 text-white">
-                <i class="fab fa-whatsapp text-green-500 text-4xl"></i> ثبت درخواست قطعه
-            </h3>
-            <div class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <input type="text" id="cust_name" placeholder="نام و نام خانوادگی" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
-                    <input type="text" id="truck_model" placeholder="مدل و تیپ خودرو" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
-                </div>
-                <input type="text" id="part_name" placeholder="نام قطعه یا شماره فنی" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 focus:border-yellow-500 outline-none font-bold">
-                <button onclick="sendToWhatsapp()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-slate-900 font-black py-6 rounded-2xl text-xl transition-all shadow-2xl active:scale-95 flex items-center justify-center gap-3">
-                    ارسال به علیرضا نقشینه <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-16 text-center border-t border-white/5">
-        <div class="flex justify-center gap-10 mb-8">
-            <a href="tel:09166181829" class="text-3xl text-slate-500 hover:text-yellow-500 transition-colors"><i class="fas fa-phone"></i></a>
-            <a href="https://wa.me/989166181829" class="text-4xl text-slate-500 hover:text-green-500 transition-colors"><i class="fab fa-whatsapp"></i></a>
-        </div>
-        <p class="text-sm opacity-50 font-bold mb-2">مدیریت فروشگاه: علیرضا نقشینه</p>
-        <p class="text-[10px] opacity-30 italic mb-8">نشانی: اهواز، سه راه خرمشهر، میدان انقلاب، لوازم یدکی نقشینه</p>
-        <p class="text-[9px] font-black tracking-[8px] opacity-20 uppercase">Design by AI & REZA</p>
-    </footer>
-
-    <div class="fixed bottom-6 right-6 z-[200]">
-        <a href="https://wa.me/989166181829" class="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center text-3xl shadow-2xl animate-bounce border-4 border-white/10"><i class="fab fa-whatsapp text-white"></i></a>
-    </div>
-
-    <script>
-        function updateClock() {
-            document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('fa-IR', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        function updateDateMarquee() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const today = new Date().toLocaleDateString('fa-IR', options);
-            // متن زیرنویس با تکرار برای پر کردن فضا
-            const fullText = ` • امروز ${today} • بازرگانی نقشینه؛ مرکز تخصصی قطعات سنگین • مدیریت: علیرضا نقشینه • `;
-            document.getElementById('persian-date-marquee').textContent = fullText + fullText;
-        }
-        updateDateMarquee();
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fas fa-moon text-xl';
-                localStorage.theme = 'light';
-            } else {
-                html.classList.add('dark');
-                icon.className = 'fas fa-sun text-xl';
-                localStorage.theme = 'dark';
-            }
-        }
-        if (localStorage.theme === 'dark') document.documentElement.classList.add('dark');
-
+        // WhatsApp Function
         function sendToWhatsapp() {
             const name = document.getElementById('cust_name').value;
             const model = document.getElementById('truck_model').value;
             const part = document.getElementById('part_name').value;
-            if(!part) return alert('لطفاً نام قطعه را وارد کنید');
-            const msg = `سلام جناب آقای علیرضا نقشینه، استعلام قیمت:%0A👤 نام: ${name || 'مشتری'}%0A🚛 خودرو: ${model || 'سنگین'}%0A⚙️ قطعه: *${part}*`;
+            if(!part) return alert('نام قطعه را وارد کنید');
+            const msg = `سلام جناب نقشینه، استعلام:%0A👤 ${name}%0A🚛 ${model}%0A⚙️ *${part}*`;
             window.location.href = `https://wa.me/989166181829?text=${msg}`;
         }
-
-        async function getIP() {
-            try {
-                const r = await fetch('https://api.ipify.org?format=json');
-                const d = await r.json();
-                document.getElementById('user-ip').textContent = d.ip;
-            } catch(e) { document.getElementById('user-ip').textContent = 'Active'; }
-        }
-        getIP();
+        
+        // Counter logic placeholder (ساده شده برای پرفورمنس)
+        document.querySelectorAll('.counter').forEach(c => c.innerText = c.getAttribute('data-target') + "+");
     </script>
 </body>
 </html>
