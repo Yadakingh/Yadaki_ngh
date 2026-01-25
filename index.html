@@ -17,100 +17,366 @@
                     colors: {
                         'scania-blue': '#00549e',
                         'industrial-gold': '#FFD700',
-                        'carbon': '#1a1a1a',
+                        'carbon': '#0f0f0f',
                     },
-                    animation: { 'spin-slow': 'spin 8s linear infinite' }
+                    animation: { 
+                        'spin-slow': 'spin 8s linear infinite',
+                        'marquee': 'marquee 25s linear infinite',
+                        'pulse-glow': 'pulse-glow 3s infinite'
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { boxShadow: '0 0 10px #FFD700' },
+                            '50%': { boxShadow: '0 0 25px #FFD700' },
+                        }
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        body { font-family: 'Vazirmatn', sans-serif; background-color: #1a1a1a; scroll-behavior: smooth; }
+        body { 
+            font-family: 'Vazirmatn', sans-serif; 
+            background-color: #0f0f0f; 
+            scroll-behavior: smooth; 
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #FFD700; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #b39700; }
+
+        #canvas-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            pointer-events: none; /* موس از روی آن رد شود */
+        }
+
         #preloader {
-            position: fixed; inset: 0; background: #050505; z-index: 9999;
+            position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; justify-content: center; align-items: center; flex-direction: column;
             transition: opacity 0.8s ease-in-out;
         }
-        .loader-bar-container { width: 200px; height: 4px; background: #333; border-radius: 2px; margin-top: 20px; overflow: hidden; }
-        .loader-bar { width: 0%; height: 100%; background: #FFD700; transition: width 4s linear; }
-        .hero-bg {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.9)),
-                        url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover; background-position: center; background-attachment: fixed;
-        }
+        
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(20, 20, 20, 0.6); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
-        .led-marquee { background: #000; border-bottom: 2px solid #333; color: #ff3333; text-shadow: 0 0 5px #ff0000; }
+        
+        .glass-panel:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .led-marquee { 
+            background: repeating-linear-gradient(0deg, #000, #000 2px, #111 2px, #111 4px);
+            border-bottom: 2px solid #333; color: #ff3333; text-shadow: 0 0 8px #ff0000; 
+        }
+
         .gold-text {
-            background: linear-gradient(to bottom, #cfc09f 22%, #634f2c 78%); 
+            background: linear-gradient(to bottom, #fffacd 0%, #FFD700 50%, #b8860b 100%); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
         }
-        .tilt-card { transform-style: preserve-3d; }
+
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            border-color: #FFD700;
+            transform: translateY(-2px);
+        }
+
+        .hero-overlay {
+            background: radial-gradient(circle at center, transparent 0%, #0f0f0f 100%);
+        }
     </style>
 </head>
-<body class="text-slate-100 min-h-screen overflow-x-hidden" id="main-body">
+<body class="text-slate-100 min-h-screen relative">
+
+    <canvas id="canvas-bg"></canvas>
 
     <div id="preloader">
-        <div class="relative w-28 h-28 mb-6">
-            <div class="absolute inset-0 border-t-4 border-industrial-gold rounded-full animate-spin"></div>
-            <div class="absolute inset-3 border-r-4 border-scania-blue rounded-full animate-spin-slow"></div>
-            <div class="absolute inset-0 flex items-center justify-center"><i class="fas fa-shield-alt text-4xl text-gray-500"></i></div>
+        <div class="relative w-32 h-32 mb-8">
+            <div class="absolute inset-0 border-t-4 border-industrial-gold rounded-full animate-spin shadow-[0_0_20px_#FFD700]"></div>
+            <div class="absolute inset-4 border-r-4 border-scania-blue rounded-full animate-spin-slow"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fas fa-shield-alt text-5xl text-gray-400"></i>
+            </div>
         </div>
-        <h2 class="text-2xl font-black text-white uppercase mb-2">NAGHSHINEH</h2>
-        <p class="text-xs text-industrial-gold animate-pulse" id="loading-text">LOADING SYSTEM...</p>
-        <div class="loader-bar-container"><div class="loader-bar" id="progress-fill"></div></div>
-    </div>
-
-    <div class="fixed bottom-4 left-4 z-[100] glass-panel px-5 py-3 rounded-xl hidden md:flex flex-col border-r-4 border-industrial-gold shadow-2xl">
-        <div class="text-industrial-gold font-black text-xl tracking-widest" id="live-clock">00:00:00</div>
-        <div class="text-gray-400 text-xs font-bold border-t border-white/10 pt-1 mt-1" id="live-date">...</div>
-    </div>
-
-    <div class="led-marquee py-2 sticky top-0 z-50 overflow-hidden whitespace-nowrap">
-        <div class="inline-block animate-[marquee_20s_linear_infinite] px-4 text-sm md:text-base">
-            🛑 مرکز پخش قطعات اسکانیا، ولوو و بنز در جنوب کشور • مدیریت: علیرضا نقشینه • ارسال فوری 🛑
+        <h2 class="text-3xl font-black text-white uppercase mb-2 tracking-[0.3em]">NAGHSHINEH</h2>
+        <div class="w-64 h-1 bg-gray-800 rounded-full mt-4 overflow-hidden">
+            <div class="h-full bg-industrial-gold animate-[width_2s_ease-in-out]" id="progress-fill" style="width: 0%"></div>
         </div>
     </div>
 
-    <nav class="glass-panel mx-4 mt-4 rounded-2xl px-6 py-4 flex justify-between items-center relative z-40">
+    <div class="fixed bottom-6 left-6 z-[90] glass-panel px-8 py-5 rounded-3xl hidden md:flex flex-col border-r-4 border-industrial-gold shadow-2xl transition-transform hover:scale-105 duration-300">
+        <div class="text-industrial-gold font-black text-6xl tracking-widest leading-none drop-shadow-md" id="live-clock">00:00</div>
+        <div class="text-gray-400 text-sm font-bold border-t border-white/10 pt-2 mt-2 flex justify-between items-center">
+            <span id="live-date">...</span>
+            <i class="fas fa-clock text-industrial-gold animate-pulse"></i>
+        </div>
+    </div>
+
+    <div class="led-marquee py-3 sticky top-0 z-50 overflow-hidden whitespace-nowrap shadow-lg">
+        <div class="inline-block animate-marquee px-4 text-base md:text-lg font-bold tracking-wider">
+            🚨 مرکز پخش تخصصی قطعات اسکانیا، ولوو و بنز در جنوب کشور • مدیریت: علیرضا نقشینه • <span class="text-white">ارسال فوری هوایی و زمینی به سراسر ایران</span> 🚨
+        </div>
+    </div>
+
+    <nav class="glass-panel mx-4 mt-6 rounded-2xl px-6 py-4 flex justify-between items-center relative z-40 transition-all duration-300 hover:bg-white/5">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-industrial-gold to-yellow-700 rounded-lg flex items-center justify-center">
-                <i class="fas fa-truck-monster text-black text-2xl"></i>
+            <div class="w-14 h-14 bg-gradient-to-br from-industrial-gold to-yellow-800 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+                <i class="fas fa-truck-monster text-black text-3xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-black text-white">بازرگانی <span class="text-industrial-gold">نقشینه</span></h1>
+                <h1 class="text-2xl font-black text-white">بازرگانی <span class="text-industrial-gold drop-shadow-sm">نقشینه</span></h1>
+                <p class="text-[10px] text-gray-400 tracking-widest">HEAVY PARTS TRADING</p>
             </div>
         </div>
-        <div class="flex items-center gap-3">
-            <div class="md:hidden text-[10px] text-industrial-gold bg-white/5 px-2 py-1 rounded border border-white/10" id="mobile-clock">00:00</div>
-            <a href="tel:09166181829" class="px-6 py-2 bg-industrial-gold/10 rounded-xl border border-industrial-gold/30 font-bold hover:bg-industrial-gold hover:text-black transition-all">تماس</a>
+        <div class="flex items-center gap-4">
+            <div class="md:hidden text-lg font-bold text-industrial-gold bg-black/40 px-3 py-1 rounded-lg border border-white/10" id="mobile-clock">00:00</div>
+            <a href="tel:09166181829" class="group relative px-8 py-3 bg-industrial-gold text-black font-black rounded-xl overflow-hidden transition-all hover:shadow-[0_0_20px_#FFD700]">
+                <span class="relative z-10">تماس فوری</span>
+                <div class="absolute inset-0 h-full w-full bg-white/30 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+            </a>
         </div>
     </nav>
 
-    <header class="hero-bg relative min-h-screen flex items-center justify-center text-center px-4">
-        <div class="relative z-10" data-aos="zoom-out">
-            <h1 class="text-5xl md:text-8xl font-black mb-6 drop-shadow-2xl">قدرت در <br><span class="gold-text" id="typing-text"></span></h1>
-            <p class="text-gray-300 text-lg md:text-2xl max-w-3xl mx-auto mb-10">تامین قطعات اصلی ناوگان سنگین تحت نظارت علیرضا نقشینه</p>
-            <a href="#request-part" class="px-8 py-4 bg-industrial-gold text-black font-black rounded-xl shadow-lg transition transform hover:scale-105 inline-block">استعلام موجودی</a>
+    <header class="relative min-h-screen flex items-center justify-center text-center px-4 -mt-20 z-10">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?q=80&w=2070')] bg-cover bg-center opacity-20"></div>
+        <div class="absolute inset-0 hero-overlay"></div>
+        
+        <div class="relative z-10" data-aos="zoom-out" data-aos-duration="1000">
+            <div class="inline-block border border-industrial-gold/30 bg-industrial-gold/5 px-4 py-1 rounded-full text-industrial-gold text-sm mb-6 animate-pulse">
+                <i class="fas fa-star text-xs mr-2"></i> تامین کننده برتر قطعات
+            </div>
+            <h1 class="text-6xl md:text-9xl font-black mb-8 drop-shadow-2xl leading-tight">قدرت در <br><span class="gold-text" id="typing-text"></span></h1>
+            <p class="text-gray-300 text-lg md:text-2xl max-w-3xl mx-auto mb-12 font-light leading-relaxed">
+                تامین قطعات اصلی ناوگان سنگین با <span class="text-white font-bold border-b-2 border-industrial-gold">گارانتی معتبر</span> و ارسال سریع
+                <br>تحت نظارت مهندس علیرضا نقشینه
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#request-part" class="px-10 py-5 bg-gradient-to-r from-industrial-gold to-yellow-600 text-black font-black rounded-2xl shadow-[0_0_20px_rgba(255,215,0,0.4)] transition transform hover:-translate-y-1 hover:scale-105">
+                    استعلام موجودی <i class="fas fa-arrow-left mr-2"></i>
+                </a>
+                <a href="https://wa.me/989166181829" class="px-10 py-5 bg-white/5 border border-white/20 text-white font-bold rounded-2xl backdrop-blur-sm transition hover:bg-white/10 hover:border-white/40">
+                    مشاوره رایگان
+                </a>
+            </div>
         </div>
     </header>
 
     <section class="container mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-20">
-        <div class="tilt-card glass-panel p-8 rounded-[2rem] text-center" data-aos="fade-up">
-            <i class="fas fa-bus text-4xl text-scania-blue mb-4"></i>
-            <h3 class="text-2xl font-bold mb-2">قطعات اسکانیا</h3>
-            <p class="text-gray-400">تخصصی مارال، درسا و نسل جدید</p>
+        <div class="tilt-card glass-panel p-10 rounded-[2.5rem] text-center group transition-all duration-500 hover:bg-scania-blue/20" data-aos="fade-up">
+            <div class="w-20 h-20 mx-auto bg-scania-blue/20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="fas fa-bus text-4xl text-scania-blue drop-shadow-[0_0_10px_rgba(0,84,158,0.8)]"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-white">قطعات اسکانیا</h3>
+            <p class="text-gray-400 leading-relaxed">تامین تخصصی قطعات بدنه و موتوری اتوبوس‌های مارال، درسا و کامیون‌های نسل جدید.</p>
         </div>
-        <div class="tilt-card glass-panel p-8 rounded-[2rem] text-center" data-aos="fade-up" data-aos-delay="100">
-            <i class="fas fa-truck text-4xl text-white mb-4"></i>
-            <h3 class="text-2xl font-bold mb-2">لوازم ولوو</h3>
-            <p class="text-gray-400">قطعات موتوری و بدنه FH500/460</p>
+        
+        <div class="tilt-card glass-panel p-10 rounded-[2.5rem] text-center group transition-all duration-500 hover:bg-white/10" data-aos="fade-up" data-aos-delay="100">
+            <div class="w-20 h-20 mx-auto bg-white/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="fas fa-truck text-4xl text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-white">لوازم ولوو</h3>
+            <p class="text-gray-400 leading-relaxed">مرجع کامل قطعات اورجینال ولوو FH500, FH460 و سری‌های قدیمی با کد فنی.</p>
         </div>
-        <div class="tilt-card glass-panel p-8 rounded-[2rem] text-center" data-aos="fade-up" data-aos-delay="200">
-            <i class="fas fa-gem text-4xl text-industrial-gold mb-4"></i>
+        
+        <div class="tilt-card glass-panel p-10 rounded-[2.5rem] text-center group transition-all duration-500 hover:bg-industrial-gold/10" data-aos="fade-up" data-aos-delay="200">
+            <div class="w-20 h-20 mx-auto bg-industrial-gold/20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="fas fa-certificate text-4xl text-industrial-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-industrial-gold">ضمانت اصالت</h3>
+            <p class="text-gray-400 leading-relaxed">تمامی قطعات دارای هولوگرام اصلی بوده و توسط تیم فنی نقشینه تایید کیفیت می‌شوند.</p>
+        </div>
+    </section>
+
+    <section id="request-part" class="container mx-auto px-6 py-20 max-w-5xl relative z-20">
+        <div class="glass-panel p-8 md:p-16 rounded-[3rem] border border-white/10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-industrial-gold/10 blur-[100px] rounded-full"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-scania-blue/10 blur-[100px] rounded-full"></div>
+
+            <div class="relative z-10">
+                <h3 class="text-4xl font-black mb-2 text-center text-industrial-gold">ثبت سفارش آنلاین</h3>
+                <p class="text-center text-gray-400 mb-10">مشخصات قطعه مورد نظر را وارد کنید، در کمتر از ۱۰ دقیقه پاسخ می‌دهیم.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <input type="text" id="cust_name" placeholder="نام و نام خانوادگی" class="input-field w-full bg-black/40 border border-white/10 rounded-2xl p-5 text-white outline-none placeholder-gray-500">
+                    <input type="text" id="truck_model" placeholder="مدل خودرو (مثال: اسکانیا مارال)" class="input-field w-full bg-black/40 border border-white/10 rounded-2xl p-5 text-white outline-none placeholder-gray-500">
+                </div>
+                <input type="text" id="part_name" placeholder="نام قطعه یا شماره فنی" class="input-field w-full bg-black/40 border border-white/10 rounded-2xl p-5 text-white outline-none placeholder-gray-500 mb-8">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button onclick="sendToWhatsapp()" class="group py-5 bg-green-600/90 hover:bg-green-600 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-[0_0_20px_rgba(22,163,74,0.4)]">
+                        <i class="fab fa-whatsapp text-2xl group-hover:animate-bounce"></i> ارسال در واتساپ
+                    </button>
+                    <button onclick="sendToSMS()" class="group py-5 bg-blue-600/90 hover:bg-blue-600 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                        <i class="fas fa-comment-dots text-2xl group-hover:animate-bounce"></i> ارسال پیامک
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center relative z-20 border-t border-white/5 bg-black/50 backdrop-blur-lg mt-10">
+        <div class="flex justify-center items-center gap-2 mb-4">
+            <i class="fas fa-tools text-industrial-gold"></i>
+            <span class="font-bold text-white">بازرگانی نقشینه</span>
+        </div>
+        <p class="text-gray-500 text-sm">© تمامی حقوق محفوظ است | طراحی شده با تکنولوژی روز ۱۴۰۴</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+    
+    <script>
+        // Preloader Logic
+        window.addEventListener('load', () => {
+            const progress = document.getElementById('progress-fill');
+            const preloader = document.getElementById('preloader');
+            
+            progress.style.width = '100%';
+            
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => { 
+                    preloader.style.display = 'none';
+                    AOS.init({ once: true, offset: 100 });
+                    typeWriter();
+                }, 800);
+            }, 1500);
+        });
+
+        // Live Clock
+        function updateDateTime() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute:'2-digit', second:'2-digit' };
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            
+            document.getElementById('live-clock').innerText = now.toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('live-date').innerText = now.toLocaleDateString('fa-IR', dateOptions);
+            document.getElementById('mobile-clock').innerText = now.toLocaleTimeString('fa-IR', {hour: '2-digit', minute:'2-digit'});
+        }
+        setInterval(updateDateTime, 1000); updateDateTime();
+
+        // Typewriter Effect
+        const textToType = "قطعات اصلی";
+        let typeIndex = 0;
+        function typeWriter() {
+            const elem = document.getElementById('typing-text');
+            if (typeIndex < textToType.length) {
+                elem.innerHTML += textToType.charAt(typeIndex);
+                typeIndex++; 
+                setTimeout(typeWriter, 200);
+            }
+        }
+
+        // 3D Tilt Effect
+        VanillaTilt.init(document.querySelectorAll(".tilt-card"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.2,
+        });
+
+        // Contact Functions
+        function sendToWhatsapp() {
+            const name = document.getElementById('cust_name').value;
+            const model = document.getElementById('truck_model').value;
+            const part = document.getElementById('part_name').value;
+            if(!part) return alert('لطفا نام قطعه را وارد کنید');
+            
+            const message = `سلام، درخواست استعلام قطعه دارم:\n👤 نام: ${name}\n🚛 خودرو: ${model}\n⚙️ قطعه: ${part}`;
+            window.location.href = `https://wa.me/989166181829?text=${encodeURIComponent(message)}`;
+        }
+
+        function sendToSMS() {
+            const name = document.getElementById('cust_name').value;
+            const model = document.getElementById('truck_model').value;
+            const part = document.getElementById('part_name').value;
+            if(!part) return alert('لطفا نام قطعه را وارد کنید');
+            
+            const message = `استعلام:\n${name}\n${model}\n${part}`;
+            const ua = navigator.userAgent.toLowerCase();
+            const sep = /iphone|ipad|ipod/.test(ua) ? '&' : '?';
+            window.location.href = `sms:09166181829${sep}body=${encodeURIComponent(message)}`;
+        }
+
+        // --- CANVAS PARTICLE BACKGROUND SCRIPT ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5; // Slow speed
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(255, 215, 0, 0.5)'; // Gold color
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = window.innerWidth < 768 ? 40 : 100; // Fewer particles on mobile
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Draw lines between nearby particles
+                for (let j = i; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.strokeStyle = `rgba(255, 215, 0, ${0.1 - dist/1000})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                                    <i class="fas fa-gem text-4xl text-industrial-gold mb-4"></i>
             <h3 class="text-2xl font-bold mb-2">ضمانت اصالت</h3>
             <p class="text-gray-400">تایید کیفیت توسط تیم فنی</p>
         </div>
